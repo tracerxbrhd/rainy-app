@@ -1,24 +1,36 @@
+import axios from 'axios';
 import React from 'react';
-import axios from 'axios'; 
 import { useEffect } from 'react';
 import {View, Text, StyleSheet, ImageBackground} from 'react-native';
 
-const weatherPage = ({weatherValue,getWeatherThunkCreator, setWeatherValue, setCountry, country}) => {
+const weatherPage = ({weatherValue,getWeatherThunkCreator,country, cloud, wind, getWeatherForecastThunkCreator, lat, lon,}) => {
+
+    const Data = new Date();
+    
+    const Hours = Data.getHours();
+
+    const Minutes = Data.getMinutes();
+
 
     useEffect(() => {
-        axios.get("https://api.openweathermap.org/data/2.5/weather?lat=56.8497600&lon=53.2044800&lang=ru&&appid=6a808b6c7e0615adfaa9bf695e0ed8f0")
-        .then(responce => {
-            console.log(responce.data.name);
-            setCountry(responce.data.name)
-            setWeatherValue(Math.round(responce.data.main.temp - 273.15))
-        })
+        getWeatherThunkCreator(lat, lon)
     }, [])
 
-    console.log(country);
+    useEffect(() => {
+        axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&lang=ru&appid=bbbd0a78d888c77a669b3cd7164b7014&units=metric`).then((response) => {
+                console.log(response);
+        })
+    }, [lat, lon])
+
+
+    console.log(lat, lon);
     return (
         <View style={style.page}>
             <ImageBackground source={require('../../assets/giphy.gif')} style={style.image}>
                 <View style={style.header}>
+                    {/* <Text style={style.timeText}>  
+                        {`${Hours}:${Minutes}`}
+                    </Text> */}
                     <Text style={style.headerText}>
                         {country}
                     </Text>
@@ -27,6 +39,14 @@ const weatherPage = ({weatherValue,getWeatherThunkCreator, setWeatherValue, setC
                     <Text style={style.bodyText}>
                         {weatherValue}°
                     </Text>
+                    <View style={style.other}>
+                        <Text style={style.cloudText}>
+                            {cloud}
+                        </Text>
+                    </View>
+                    <Text style={style.windText}>
+                            Скорость ветра: {wind} м/с
+                        </Text>
                 </View>
             </ImageBackground>
         </View> 
@@ -44,30 +64,60 @@ const style = StyleSheet.create({
     },
     header: {
         width: '100%',
-        height: '11%',
         display: "flex",
-        justifyContent: "center",
+        marginTop: "15%",
+        display: "flex",
         alignItems: "center",
     },
     headerText: {
         color: "white",
         fontSize: 19, 
-        marginTop: "8%",
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginRight: "3%",
     },
     body: {
         marginTop: "10%",
-        marginLeft: "11%",
         flex: 1,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        marginBottom: "35%",
     },
     bodyText: {
         color: "white",
         fontSize: 110,
-        marginBottom: "50%",
+        marginLeft: "7%",
+        marginBottom: "5%",
+    },
+    cloudText: {
+        color: "white",
+        fontSize: 26,
+        backgroundColor: "rgba(255, 255, 255, 0.4)",
+        padding: 10,
+        borderRadius: 30,
+        fontWeight: "300",
+    },
+    timeText: {
+        color: "white",
+        fontSize: 24,
+        backgroundColor: "rgba(255, 255, 255, 0.4)",
+        padding: 8,
+        borderRadius: 25,
+        marginRight: "15%",
+        fontWeight: "300",
+    },
+
+    windText: {
+        fontSize: 27,
+        color: "white",
+        fontWeight: "300",
+        marginTop: "4%"
+    },
+
+    other: {
+        
     }
+
 })
 
 

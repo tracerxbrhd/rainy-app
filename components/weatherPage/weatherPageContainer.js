@@ -2,7 +2,7 @@ import React from "react";
 
 import weatherPage from './weatherPage'
 
-import {getWeatherThunkCreator, setWeatherValue, setCountry} from '../../Redux/weatherReducer'
+import {getWeatherThunkCreator, setWeatherValue, getWeatherForecastThunkCreator} from '../../Redux/weatherReducer'
 
 import {connect} from "react-redux"
 
@@ -10,13 +10,17 @@ let mapStateToProps = (state) => {
     return {
         weatherValue: state.weatherPage.weatherValue,
         country: state.weatherPage.country,
+        cloud: state.weatherPage.cloud,
+        lat: state.weatherPage.lat,
+        lon: state.weatherPage.lon,
+        wind: state.weatherPage.wind,
     }
 }
 
 
 const weatherPageContainer = connect(mapStateToProps, {
     getWeatherThunkCreator,
-    setCountry,
+    // getWeatherForecastThunkCreator,
     setWeatherValue,
 }
 ) (weatherPage) 
